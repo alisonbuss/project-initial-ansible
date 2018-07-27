@@ -1,0 +1,108 @@
+---
+
+- name: "pre_task: creating variable -> var_hostname"
+  set_fact:
+    var_hostname: "{{ hostvars[inventory_hostname]['ansible_hostname'] | default('') }}"
+  no_log: true
+
+- name: "pre_task: creating variable -> var_domain"
+  set_fact:
+    var_domain: "{{ hostvars[inventory_hostname]['ansible_domain'] | default('') }}"
+  no_log: true
+
+- name: "pre_task: creating variable -> var_user"
+  set_fact:
+    var_user:
+      name: "{{ hostvars[inventory_hostname]['ansible_env'].USER | default('') }}"
+      logged: "{{ hostvars[inventory_hostname]['ansible_env'].LOGNAME | default('') }}"
+      ssh_connection: "{{ hostvars[inventory_hostname]['ansible_env'].SSH_CONNECTION | default('') }}"
+  no_log: true
+
+- name: "pre_task: creating variable -> var_networks"
+  vars:
+    var_network:
+      address: "{{ hostvars[inventory_hostname]['ansible_' + item].ipv4.address }}"
+      interface: "{{ item }}"
+      network: "{{ hostvars[inventory_hostname]['ansible_' + item].ipv4.network }}"
+      netmask: "{{ hostvars[inventory_hostname]['ansible_' + item].ipv4.netmask }}"
+      broadcast: "{{ hostvars[inventory_hostname]['ansible_' + item].ipv4.broadcast }}"
+  set_fact: 
+    var_networks: "{{ var_networks | default([]) + [ var_network ] }}"
+  with_items:
+    - "{{ hostvars[inventory_hostname]['ansible_interfaces'] | default([]) | list }}"
+  no_log: true
+
+- name: "pre_task: creating variable -> var_dns"
+  set_fact:
+    var_dns: "{{ hostvars[inventory_hostname]['ansible_dns'] | default('') }}"
+  no_log: true
+
+- name: "pre_task: creating variable -> var_cpu"
+  shell: |
+      MODEL_CPU=$(cat /proc/cpuinfo | grep -m 1 "model name" | cut -d' ' -f 4-);
+      CORES_CPU=$(cat /proc/cpuinfo | awk -F: '/cpu cores/ {printf $2;exit}' | xargs);
+      PERC_CPU=$(top -bn1 | grep load | awk '{printf "%.2f%%", $(NF-2)}');
+      echo '{"percent":"'${PERC_CPU}'","cores":"'${CORES_CPU}'","model":"'${MODEL_CPU}'"}';
+  register: var_cpu
+  ignore_errors: true
+  no_log: true
+
+- name: "pre_task: creating variable -> var_memory"
+  shell: |
+      TOTAL_MEM=$(free -m | awk 'NR==2{printf "%s", $2}');
+      USED_MEM=$(free -m | awk 'NR==2{printf "%s", $3}');
+      FREE_MEM=$((TOTAL_MEM - USED_MEM));
+      PERC_MEN=$(free -m | awk 'NR==2{printf "%.2f%%", $3*100/$2}');
+      echo '{"total":"'${TOTAL_MEM}'","used":"'${USED_MEM}'","free":"'${FREE_MEM}'","percent":"'${PERC_MEN}'"}';
+  register: var_memory
+  ignore_errors: true
+  no_log: true
+
+- name: "pre_task: creating variable -> var_disk"
+  shell: |
+      TOTAL_DISK=$(df -h | awk '$NF=="/"{printf "%d", $2}');
+      USED_DISK=$(df -h | awk '$NF=="/"{printf "%d", $3}');
+      FREE_DISK=$((TOTAL_DISK - USED_DISK));
+      PERC_DISK=$(df -h | awk '$NF=="/"{printf "%s\n", $5}');
+      echo '{"total":"'${TOTAL_DISK}'G","used":"'${USED_DISK}'G","free":"'${FREE_DISK}'G","percent":"'${PERC_DISK}'"}';
+  register: var_disk
+  ignore_errors: true
+  no_log: true
+
+- name: "pre_task: creating variable -> var_machine"
+  set_fact:
+    var_machine:
+      cpu: "{{ var_cpu.stdout | from_json | from_yaml }}"
+      memory: "{{ var_memory.stdout | from_json | from_yaml }}"
+      disk: "{{ var_disk.stdout | from_json | from_yaml }}"
+  when:
+    - (var_cpu.rc == 0)
+    - (var_memory.rc == 0)
+    - (var_disk.rc == 0)
+  no_log: true
+
+- name: "pre_task: creating variable -> var_system"
+  set_fact:
+    var_system:
+      name: "{{ system_type | default('') }}"
+      distribution: "{{ hostvars[inventory_hostname]['ansible_distribution'] | default('') }}"
+      family: "{{ hostvars[inventory_hostname]['ansible_os_family'] | default('') }}"
+      kernel: "{{ hostvars[inventory_hostname]['ansible_kernel'] | default('') }}"
+      version: "{{ hostvars[inventory_hostname]['ansible_distribution_version'] | default('') }}"
+  no_log: true
+
+- name: "pre_task: creating variable -> var_information"
+  set_fact: 
+    var_information:
+      hostname: "{{ var_hostname | default('null') }}"
+      domain: "{{ var_domain | default('null') }}"
+      user: "{{ var_user | default({}) }}"
+      networks: "{{ var_networks | default([]) }}"
+      dns: "{{ var_dns | default({}) }}"
+      machine: "{{ var_machine | default({}) }}"
+      system: "{{ var_system | default({}) }}"
+  no_log: true
+
+- name: "Output: Information from the entire infrastructure"
+  debug:
+    var=var_information

@@ -1,0 +1,14 @@
+[Unit]
+Description=Sends the system log output to (local)
+
+[Service]
+Type=simple
+Restart=always
+TimeoutStartSec=60
+RestartSec=60
+#ExecStart=/usr/bin/bash -c '/usr/bin/journalctl -o short -f > /var/log/systemlog.log'
+ExecStart=/usr/bin/bash {{ var_command_bash }}
+ExecStop=
+
+[Install]
+WantedBy=multi-user.target

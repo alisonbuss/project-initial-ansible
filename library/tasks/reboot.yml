@@ -1,0 +1,14 @@
+---
+# FONT: https://www.jeffgeerling.com/blog/2018/reboot-and-wait-reboot-complete-ansible-playbook
+
+- name: "Restart machine"
+  shell: "sleep 3 && sudo shutdown -r now"
+  async: 1
+  poll: 0
+
+- name: "Wait for the machine to finish rebooting"
+  wait_for_connection:
+    connect_timeout: 22
+    sleep: 6
+    delay: 6
+    timeout: 330

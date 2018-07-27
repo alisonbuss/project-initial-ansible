@@ -1,0 +1,33 @@
+---
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: 
+# @fonts: https://bash.cyberciti.biz/guide/Logical_Not_!
+#         https://ryanstutorials.net/bash-scripting-tutorial/bash-if-statements.php
+#-------------------------------------------------------------#
+
+# 0ª) Step: 
+# Install the JMESPath tool, a query language for JSON. 
+# It will be used with Ansible to apply filter to JSON lists.
+# @fonts: http://jmespath.org/
+#         http://jmespath.org/examples.html
+#         https://github.com/jmespath/jmespath.py
+#         https://github.com/jmespath/jmespath.terminal
+#         http://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#json-query-filter
+- name: "Installation the Python Pip and JMESPath tool, a query language for JSON, using in Ansible"
+  hosts: "localhost"
+  become: true
+  vars_files:
+    - "{{ global_vars_files.public }}"
+  tasks:
+    - name: "Install the Python Pip and JMESPath tool"
+      shell: |
+          if ! [ $(which pip) ] ; then
+              apt install python-pip;
+              pip install jmespath;
+              pip install jmespath-terminal;
+          fi
+      ignore_errors: true
+      when: (ansible_distribution == 'Ubuntu')
+  tags:
+    - admin-client
+    - jmespath

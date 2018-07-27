@@ -1,0 +1,33 @@
+---
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: Enable system general log storage
+# @fonts: 
+#-------------------------------------------------------------#
+
+- name: "Define shell command to generate the log file"
+  set_fact:
+    COMMAND_BASH: "-c '/usr/bin/journalctl -o short -f > {{system_log_folder}}/{{system_log_file}}'"
+
+- name: "Output: Final command to be executed in the service"
+  debug:
+    msg: "ExecStart=/usr/bin/bash {{ COMMAND_BASH }}"
+
+# BEFORE - ExecStart=/usr/bin/bash -c '/usr/bin/journalctl -o short -f > /var/log/systemlog.log'
+# AFTER  - ExecStart=/usr/bin/bash {{ var_command_bash }}
+- name: "Create systemd unit file for systemlog-output-local"
+  vars:
+    var_command_bash: "{{ COMMAND_BASH }}"
+  template:
+    src: "../templates/systemlog-output-local.service.j2"
+    dest: "{{system_systemd_dir}}/systemlog-output-local.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Enable and start service (systemlog-output-local)"
+  systemd:
+    daemon_reload: yes
+    name: systemlog-output-local
+    enabled: yes
+    state: started
+    no_block: no

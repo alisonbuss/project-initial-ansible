@@ -1,0 +1,22 @@
+---
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: 
+# @fonts: 
+#-------------------------------------------------------------#
+
+# 1ª) Step:
+- name: "Initiating execution of tasks Ansible"
+  hosts: "cluster_all"
+  become: true
+  vars_files:
+    - "{{ global_vars_files.public }}"
+    - "{{ global_vars_files.system }}"
+    - "{{ global_vars_files.ssh_initial }}"
+  roles:
+    - role: role-hello-world
+      vars:
+        hello_message: ""
+      tags: hello-world
+  tags:
+    - cluster-all
+    - hello-world

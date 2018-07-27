@@ -1,0 +1,7 @@
+---
+
+# Determine the type of distribution CentOS environment.
+env_system: centos
+
+# Location of the Python installation in remote system(CentOS).
+ansible_python_interpreter: /usr/bin/python

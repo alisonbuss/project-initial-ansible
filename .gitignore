@@ -1,0 +1,7 @@
+# Vagrant Folder
+.vagrant/
+
+# Ansible Folder
+provision/ansible/library/variables/private/*
+!provision/ansible/library/variables/private/README.md
+!provision/ansible/library/variables/private/vars-password.example.yml

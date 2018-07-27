@@ -1,0 +1,10 @@
+---
+
+# Determine the type of distribution Ubuntu Desktop environment.
+env_system: ubuntu
+
+# Definition of local access "On your own host".
+ansible_connection: local
+
+# Location of the Python installation in (Ubuntu Desktop).
+ansible_python_interpreter: /usr/bin/python

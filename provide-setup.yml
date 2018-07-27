@@ -1,0 +1,93 @@
+---
+#-----------------------|DOCUMENTATION|-----------------------#
+# @descr: 
+# @fonts: 
+#-------------------------------------------------------------#
+
+
+# PING ##########################################################
+- name: "PING -- Initiating the testing of 'ping' on all host"
+  hosts: "cluster_all"
+  become: false ## By default, keep false.
+  gather_facts: false
+  #vars_files: 
+    #- "{{ global_vars_files.public }}"
+    #- "{{ global_vars_files.system }}"
+    #- "{{ global_vars_files.ssh_initial }}"
+  tasks:
+    - name: "sdasdasdasdsa"
+      debug:
+        var=global_vars_files.ssh_initial
+    
+    - action: ping
+  tags:
+    - environment
+    - ping
+
+
+# ansible -i ./inventories/development/hosts all -m ping
+
+
+
+
+
+
+# # SETUP #########################################################
+# - name: "SETUP -- Initiating the execution of the ansible 'setup' (Gather Facts)"
+#   hosts: "cluster_all"
+#   become: false ## By default, keep false.
+#   gather_facts: false
+#   vars_files:
+#     - "{{ global_vars_files.public }}"
+#     - "{{ global_vars_files.system }}"
+#     - "{{ global_vars_files.ssh_initial }}"
+#   tasks:
+#     - import_tasks: "{{playbook_dir}}/library/tasks/setup.yml"
+#   tags:
+#     - environment
+#     - setup
+
+# # PING ##########################################################
+# - name: "PING -- Initiating the testing of 'ping' on all host"
+#   hosts: "cluster_all"
+#   become: false ## By default, keep false.
+#   gather_facts: false
+#   vars_files: 
+#     - "{{ global_vars_files.public }}"
+#     - "{{ global_vars_files.system }}"
+#     - "{{ global_vars_files.ssh_initial }}"
+#   tasks:
+#     - import_tasks: "{{playbook_dir}}/library/tasks/ping.yml"
+#   tags:
+#     - environment
+#     - ping
+
+# # REBOOT ########################################################
+# - name: "REBOOT -- Initiating system reboot of all hosts"
+#   hosts: "cluster_all"
+#   become: false ## By default, keep false.
+#   gather_facts: false
+#   vars_files:
+#     - "{{ global_vars_files.public }}"
+#     - "{{ global_vars_files.system }}"
+#     - "{{ global_vars_files.ssh_initial }}"
+#   tasks:
+#     - import_tasks: "{{playbook_dir}}/library/tasks/reboot.yml"
+#   tags:
+#     - environment
+#     - reboot
+
+# # INFO ##########################################################
+# - name: "INFO -- Initiating collecting information from all hosts"
+#   hosts: "cluster_all"
+#   become: false ## By default, keep false.
+#   gather_facts: true
+#   vars_files:
+#     - "{{ global_vars_files.public }}"
+#     - "{{ global_vars_files.system }}"
+#     - "{{ global_vars_files.ssh_initial }}"
+#   tasks:
+#     - import_tasks: "{{playbook_dir}}/library/tasks/information.yml"
+#   tags:
+#     - environment
+#     - info

@@ -1,0 +1,12 @@
+
+# Defining the initial host address of the infrastructure.
+host_local       ansible_host=127.0.0.1
+
+host_server01    ansible_host=192.168.28.133
+
+# Defining the main groups of hosts in the environment.
+[localhost]
+host_local
+
+[cluster_all]
+host_server01
