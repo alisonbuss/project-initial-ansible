@@ -1,49 +1,27 @@
 ---
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Apply basic security settings such as: (User creation, Privileges, 
-#         Settings in sysctl, sshd and iptables)
-# @fonts: https://github.com/githubixx/ansible-role-harden-linux
-#         https://www.linode.com/docs/security/firewalls/control-network-traffic-with-iptables/
-#         https://www.digitalocean.com/community/tutorials/how-to-isolate-servers-within-a-private-network-using-iptables
-#         https://www.booleanworld.com/depth-guide-iptables-linux-firewall/
-#         https://medium.com/@jasonrigden/hardening-ssh-1bcb99cd4cef
-#         https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-at-scaleway-part-2/
-#         http://docs.ansible.com/ansible/latest/modules/user_module.html
-#         http://docs.ansible.com/ansible/latest/modules/authorized_key_module.html
-#         http://docs.ansible.com/ansible/latest/modules/sysctl_module.html
-#         http://bencane.com/2012/09/17/iptables-linux-firewall-rules-for-a-basic-web-server/
-#         http://engineering.invisionapp.com/post/coreos-system-logs/
+# @descr:
+# @fonts: 
 #-------------------------------------------------------------#
 
-# Print the current operating system and the supported systems in the role.
-- name: "Output: View current system and supported systems by the role"
+- name: "Register if the support folder exists on the server"
+  shell: "ls /support-files/"
+  register: exists_support_files
+  ignore_errors: true
+
+- name: "Output: The support directory exist?"
   debug:
-    msg: "--Current System:[{{system_current}}] --System Supported:[{{system_support_centos}},{{system_support_ubuntu}},{{system_support_coreos}}]"
+    msg: "RESULT: {% if exists_support_files.rc == 0 %}Contains.{% else %}Not contain.{% endif %}"
 
-- name: "Create directory for services of the SystemD"
-  file:
-    path: "{{system_systemd_dir}}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
+- name: "Output: List contents of support directories"
+  debug:
+    msg: "RESULT: [{{ exists_support_files.stdout | replace('\n', ',') }}]"
+  when: exists_support_files is failed
 
-# Enable system general log storage.
-- import_tasks: "./dist-coreos/apply-system-log.yml"
-  when: (system_log == true)
+- name: "Custom message"
+  set_fact:
+    CONST_MSG: "--{{hello_message}}--"
 
-# Apply system update.               
-- import_tasks: "./dist-coreos/apply-update.yml"
-  when: (system_update == true)
-
-# Defining system update schedule.   
-- import_tasks: "./dist-coreos/apply-update-schedule.yml"
-  when: (system_update_schedule == true)
-
-# Defining the initial customization of the system.
-- import_tasks: "./dist-coreos/apply-custom-system.yml"
-  when: (system_custom == true)
-
-# Customize the kernel and system settings through SysCtl.
-- import_tasks: "./dist-coreos/apply-custom-sysctl.yml"
-  when: (system_custom_sysctl == true)
+- name: "Output: The message"
+  debug:
+    msg: "RESULT: {{ CONST_MSG }}"

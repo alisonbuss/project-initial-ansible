@@ -15,7 +15,7 @@
   roles:
     - role: role-hello-world
       vars:
-        hello_message: ""
+        hello_message: "Message as custom value: 'Hello World !!!'"
       tags: hello-world
   tags:
     - cluster-all

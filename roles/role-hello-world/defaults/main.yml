@@ -1,16 +1,7 @@
 ---
 #-----------------------|DOCUMENTATION|-----------------------#
-# @descr: Default variables to be used in the Security rule.
-# @fonts: https://github.com/githubixx/ansible-role-harden-linux
-#         https://www.linode.com/docs/security/firewalls/control-network-traffic-with-iptables/
-#         https://medium.com/@jasonrigden/hardening-ssh-1bcb99cd4cef
-#         https://www.digitalocean.com/community/tutorials/how-to-isolate-servers-within-a-private-network-using-iptables
-#         https://www.booleanworld.com/depth-guide-iptables-linux-firewall/
-#         https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-at-scaleway-part-2/
-#         http://docs.ansible.com/ansible/latest/modules/user_module.html
-#         http://docs.ansible.com/ansible/latest/modules/authorized_key_module.html
-#         http://docs.ansible.com/ansible/latest/modules/sysctl_module.html
-#         https://tecadmin.net/enable-logging-in-iptables-on-linux/
+# @descr: Default variables to be used in the rule.
+# @fonts: 
 #-------------------------------------------------------------#
 
 # Current operating system of the environment.
@@ -20,77 +11,5 @@ system_support_centos: centos
 system_support_ubuntu: ubuntu
 system_support_coreos: coreos
 
-# Activation control of specific resources.
-system_log: false
-system_update: false
-system_update_schedule: false
-system_custom: false
-system_custom_sysctl: false
+hello_message: "Message as default value: 'Hello World !!!'"
 
-# The directory from services(*.service) of SystemD.
-system_systemd_dir: "/etc/systemd/system"
-
-# The directory and file for Logs.
-system_log_file: "systemlog.log"
-system_log_folder: "/var/log"
-
-# Most of this settings are recommendations from Google which they use for
-# their Google Compute Cloud OS images and from UFW firewall. Add more settings
-# on your own by adding a group or host variable called "sysctl_settings_user".
-# "sysctl_settings" and "sysctl_settings_user" will get merged by a
-# task. You can also override a setting defined in "sysctl_settings"
-# by specifing a key with the same name and a different value in
-# "sysctl_settings_user".
-#
-# For more information about this settings have a look at:
-# https://cloud.google.com/compute/docs/images/building-custom-os
-# https://cloud.google.com/compute/docs/images/configuring-imported-images
-# With ufw package installed: /etc/ufw/sysctl.conf
-#
-# The following settings are not available in Scaleway's Linux image but maybe
-# other use it (keep it for reference):
-# "kernel.yama.ptrace_scope": 1                   # Set ptrace protections
-#
-# This would be cool but doesn't work with UFW very well so leave it out:
-# "kernel.modules_disabled": 1                    # Disable CAP_SYS_MODULE which allows for loading and unloading of kernel modules.
-                                                  # If you set kernel.modules_disabled=1 you're not able to load new netfilter/iptable
-                                                  # modules anymore (at least on Ubuntu 16.04)! So "ufw" would fail to start if
-                                                  # it is loaded afterwards.
-# Add this to "sysctl_settings_user" to turn off ipv6 autoconfiguration:
-# "net.ipv6.conf.default.autoconf": 0
-# "net.ipv6.conf.all.autoconf": 0
-#
-# Add this to "sysctl_settings_user" to enable ipv6 privacy addressing
-# "net.ipv6.conf.default.use_tempaddr": 2
-# "net.ipv6.conf.all.use_tempaddr": 2
-system_sysctl_settings:
-  "net.ipv4.tcp_syncookies": 1                    # Enable syn flood protection
-  "net.ipv4.conf.all.accept_source_route": 0      # Ignore source-routed packets
-  "net.ipv6.conf.all.accept_source_route": 0      # IPv6 - Ignore ICMP redirects
-  "net.ipv4.conf.default.accept_source_route": 0  # Ignore source-routed packets
-  "net.ipv6.conf.default.accept_source_route": 0  # IPv6 - Ignore source-routed packets
-  "net.ipv4.conf.all.accept_redirects": 0         # Ignore ICMP redirects
-  "net.ipv6.conf.all.accept_redirects": 0         # IPv6 - Ignore ICMP redirects
-  "net.ipv4.conf.default.accept_redirects": 0     # Ignore ICMP redirects
-  "net.ipv6.conf.default.accept_redirects": 0     # IPv6 - Ignore ICMP redirects
-  "net.ipv4.conf.all.secure_redirects": 1         # Ignore ICMP redirects from non-GW hosts
-  "net.ipv4.conf.default.secure_redirects": 1     # Ignore ICMP redirects from non-GW hosts
-  "net.ipv4.ip_forward": 0                        # Do not allow traffic between networks or act as a router
-  "net.ipv6.conf.all.forwarding": 0               # IPv6 - Do not allow traffic between networks or act as a router
-  "net.ipv4.conf.all.send_redirects": 0           # Don't allow traffic between networks or act as a router
-  "net.ipv4.conf.default.send_redirects": 0       # Don't allow traffic between networks or act as a router
-  "net.ipv4.conf.all.rp_filter": 1                # Reverse path filtering - IP spoofing protection
-  "net.ipv4.conf.default.rp_filter": 1            # Reverse path filtering - IP spoofing protection
-  "net.ipv4.icmp_echo_ignore_broadcasts": 1       # Ignore ICMP broadcasts to avoid participating in Smurf attacks
-  "net.ipv4.icmp_ignore_bogus_error_responses": 1 # Ignore bad ICMP errors
-  "net.ipv4.icmp_echo_ignore_all": 0              # Ignore bad ICMP errors
-  "net.ipv4.conf.all.log_martians": 1             # Log spoofed, source-routed, and redirect packets
-  "net.ipv4.conf.default.log_martians": 1         # Log spoofed, source-routed, and redirect packets
-  "net.ipv4.tcp_rfc1337": 1                       # Implement RFC 1337 fix
-  "kernel.randomize_va_space": 2                  # Randomize addresses of mmap base, heap, stack and VDSO page
-  "fs.protected_hardlinks": 1                     # Provide protection from ToCToU races
-  "fs.protected_symlinks": 1                      # Provide protection from ToCToU races
-  "kernel.kptr_restrict": 1                       # Make locating kernel addresses more difficult
-  "kernel.perf_event_paranoid": 2                 # Set perf only available to root
-
-system_sysctl_settings_merge: {}
