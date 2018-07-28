@@ -15,9 +15,8 @@
 
 # DEFAULT VARIABLES - STRUCTURAL
 
-SYSTEM            ?= coreos
-ENVIRONMENT       ?= development
 WORKING_DIRECTORY ?= `pwd`
+ENVIRONMENT       ?= development
 PLAYBOOK_DIR      ?= $(WORKING_DIRECTORY)
 INVENTORY_FILE    ?= $(PLAYBOOK_DIR)/inventories/$(ENVIRONMENT)/hosts
 # Parameter that defines the amount of information that will be shown 
@@ -31,7 +30,6 @@ plan:
 	@echo "The default values to be used by this Makefile:";
 	@echo "";
 	@echo "    --> MAKECMDGOALS: 'make $(MAKECMDGOALS)'";
-	@echo "    --> SYSTEM: $(SYSTEM)";
 	@echo "    --> ENVIRONMENT: $(ENVIRONMENT)";
 	@echo "    --> WORKING_DIRECTORY: $(WORKING_DIRECTORY)";
 	@echo "    --> PLAYBOOK_DIR: $(PLAYBOOK_DIR)";
@@ -44,7 +42,6 @@ plan:
 provide-ping: 
 	@echo "Initiating the testing of 'ping' on all host on the infrastructure...";
 	-@ansible-playbook --inventory="$(INVENTORY_FILE)" $(PLAYBOOK_DIR)/provide-setup.yml \
-	                   --extra-vars="env_system=$(SYSTEM)" \
 	                   --tags="ping" \
 	                   --verbose $(LEVEL_INF);
 	@echo "Execution Completed!"; 
@@ -52,7 +49,6 @@ provide-ping:
 provide-facts: 
 	@echo "Initiating the execution of the "setup" ansible command...";
 	-@ansible-playbook --inventory="$(INVENTORY_FILE)" $(PLAYBOOK_DIR)/provide-setup.yml \
-	                   --extra-vars="env_system=$(SYSTEM)" \
 	                   --tags="setup" \
 	                   --verbose $(LEVEL_INF);
 	-@echo -n "--Facts generated:" && ls -R ~/.ansible/custom-fact-caching;
@@ -61,7 +57,6 @@ provide-facts:
 provide-reboot: 
 	@echo "Initiating system reboot of all hosts...";
 	-@ansible-playbook --inventory="$(INVENTORY_FILE)" $(PLAYBOOK_DIR)/provide-setup.yml \
-	                   --extra-vars="env_system=$(SYSTEM)" \
 	                   --tags="reboot" \
 	                   --verbose $(LEVEL_INF);
 	@echo "Execution Completed!";
@@ -69,7 +64,6 @@ provide-reboot:
 provide-info: 
 	@echo "Initiating collecting basic information from the entire infrastructure...";
 	-@ansible-playbook --inventory="$(INVENTORY_FILE)" $(PLAYBOOK_DIR)/provide-setup.yml \
-	                   --extra-vars="env_system=$(SYSTEM)" \
 	                   --tags="info" \
 	                   --verbose $(LEVEL_INF);
 	@echo "Execution Completed!";
@@ -79,7 +73,6 @@ provide-info:
 provide-admin-client:
 	@echo "Initiating the installation of the administrators clients...";
 	@ansible-playbook --inventory="$(INVENTORY_FILE)" $(PLAYBOOK_DIR)/provide-admin-client.yml \
-	                  --extra-vars="env_system=$(SYSTEM)" \
 	                  --tags="admin-client" \
 	                  --verbose $(LEVEL_INF) --ask-become-pass;
 	@echo "Execution Completed!";
@@ -87,7 +80,6 @@ provide-admin-client:
 provide-cluster-all:
 	@echo "Initiating the customization of all hosts...";
 	@ansible-playbook --inventory="$(INVENTORY_FILE)" $(PLAYBOOK_DIR)/provide-cluster-all.yml \
-	                  --extra-vars="env_system=$(SYSTEM)" \
 	                  --tags="cluster-all" \
 	                  --verbose $(LEVEL_INF);
 	@echo "Execution Completed!";
@@ -122,7 +114,6 @@ help:
 	@echo ' '
 	@echo 'OPTIONS:'
 	@echo ' '
-	@echo '   SYSTEM               Specifies the type operational system for the Kubernetes deployment, the default is [coreos].'
 	@echo '   ENVIRONMENT          Specifies the type of environment variable for the Kubernetes deployment, the default is [development].'
 	@echo '   WORKING_DIRECTORY    Specify the current working directory, the default is [`pwd`].'
 	@echo '   PLAYBOOK_DIR         Specifies the base path of the playbooks.'

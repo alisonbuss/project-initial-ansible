@@ -19,5 +19,5 @@ global_vars_files:
    # Specific variables to a given Linux distribution.
   system: "{{playbook_dir}}/library/variables/vars-support-{{env_system}}.yml"
   # SSH connection variables, for remote access to the machines.
-  ssh_initial: "./inventories/development/connection_vars/ssh_initial.yml"
+  ssh_initial: "{{inventory_dir}}/connection_vars/ssh_initial.yml"
 

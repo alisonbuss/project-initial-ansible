@@ -16,11 +16,11 @@
 - name: "Output: List contents of support directories"
   debug:
     msg: "RESULT: [{{ exists_support_files.stdout | replace('\n', ',') }}]"
-  when: exists_support_files is failed
+  when: exists_support_files is success
 
 - name: "Custom message"
   set_fact:
-    CONST_MSG: "--{{hello_message}}--"
+    CONST_MSG: "(OS:{{system_current}}) -- {{hello_message}}"
 
 - name: "Output: The message"
   debug:

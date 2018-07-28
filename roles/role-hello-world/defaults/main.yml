@@ -5,7 +5,7 @@
 #-------------------------------------------------------------#
 
 # Current operating system of the environment.
-system_current: "{{ env_system | default('coreos') }}"
+system_current: "{{ env_system | default('ubuntu') }}"
 # Operating system supported by the Role.
 system_support_centos: centos
 system_support_ubuntu: ubuntu
