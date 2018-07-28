@@ -7,6 +7,9 @@
 
 ### A simple project from the initial Ansible implementation. 
 
+### Inspired by the tutorial: **[Laying out roles, inventories and playbooks](https://leucos.github.io/ansible-files-layout)**
+  - BY MICHEL BLANC, JULY 02, 2015.
+
 ### License
 
 [<img width="190" src="https://raw.githubusercontent.com/alisonbuss/my-licenses/master/files/logo-open-source-550x200px.png">](https://opensource.org/licenses)

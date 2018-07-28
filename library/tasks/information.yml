@@ -84,7 +84,7 @@
 - name: "pre_task: creating variable -> var_system"
   set_fact:
     var_system:
-      name: "{{ env_system | default('') }}"
+      name: "{{ global_system | default('') }}"
       distribution: "{{ hostvars[inventory_hostname]['ansible_distribution'] | default('') }}"
       family: "{{ hostvars[inventory_hostname]['ansible_os_family'] | default('') }}"
       kernel: "{{ hostvars[inventory_hostname]['ansible_kernel'] | default('') }}"

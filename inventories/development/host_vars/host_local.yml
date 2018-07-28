@@ -1,7 +1,7 @@
 ---
 
 # Determine the type of distribution Ubuntu Desktop environment.
-env_system: ubuntu
+global_system: ubuntu
 
 # Definition of local access "On your own host".
 ansible_connection: local

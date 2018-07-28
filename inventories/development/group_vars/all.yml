@@ -5,7 +5,7 @@
 
 # Default variable for the entire environment(Inventories, Playbooks, Roles, Tasks).
 # Determine the type of Linux environment.
-env_system: coreos
+global_system: coreos
 
 # DEFAULT VARIABLES: BLOBAL
 # #################################################################### #
@@ -17,7 +17,6 @@ global_vars_files:
   # Public variables to be used in all Tasks and Playbooks.
   public: "{{playbook_dir}}/library/variables/vars-public.yml"
    # Specific variables to a given Linux distribution.
-  system: "{{playbook_dir}}/library/variables/vars-support-{{env_system}}.yml"
+  system: "{{playbook_dir}}/library/variables/vars-support-{{global_system}}.yml"
   # SSH connection variables, for remote access to the machines.
   ssh_initial: "{{inventory_dir}}/connection_vars/ssh_initial.yml"
-

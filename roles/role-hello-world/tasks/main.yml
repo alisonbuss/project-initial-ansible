@@ -4,6 +4,23 @@
 # @fonts: 
 #-------------------------------------------------------------#
 
+# Print the current operating system and the supported systems in the role.
+- name: "Output: View current system and supported systems by the role"
+  debug:
+    msg: "--Current System:[{{system_current}}] --System Supported:[{{system_support_centos}},{{system_support_ubuntu}},{{system_support_coreos}}]"
+
+- debug:
+    msg: "RESULT: Supported system: CentOS"
+  when: (system_current == system_support_centos)
+
+- debug:
+    msg: "RESULT: Supported system: Ubuntu Server"
+  when: (system_current == system_support_ubuntu)
+
+- debug:
+    msg: "RESULT: Supported system: Fedora CoreOS"
+  when: (system_current == system_support_coreos)
+
 - name: "Register if the support folder exists on the server"
   shell: "ls /support-files/"
   register: exists_support_files
@@ -20,7 +37,7 @@
 
 - name: "Custom message"
   set_fact:
-    CONST_MSG: "(OS:{{system_current}}) -- {{hello_message}}"
+    CONST_MSG: " -- {{hello_message}} -- "
 
 - name: "Output: The message"
   debug:

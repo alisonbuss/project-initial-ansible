@@ -1,7 +1,7 @@
 ---
 
 # Determine the type of distribution Ubuntu environment.
-env_system: ubuntu
+global_system: ubuntu
 
 # Location of the Python installation in remote system(Ubuntu).
 ansible_python_interpreter: /usr/bin/python

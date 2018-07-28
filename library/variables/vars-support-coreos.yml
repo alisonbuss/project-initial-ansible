@@ -1,7 +1,7 @@
 ---
 
 # Determine the type of distribution CoreOS environment.
-env_system: coreos
+global_system: coreos
 
 # Location of the Python installation in remote system(CoreOS).
 ansible_python_interpreter: /opt/bin/python
